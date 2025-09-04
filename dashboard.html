@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CoinStar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #f44336;
+            --accent-color: #ffc107;
+            --text-color: #333;
+            --light-bg: #f5f5f5;
+            --sidebar-bg: #263238;
+            --sidebar-hover: #37474f;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+        
+        .navbar-nav .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+            height: calc(100vh - 76px);
+            position: sticky;
+            top: 76px;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 3px solid var(--accent-color);
+        }
+        
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .user-email {
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu li {
+            position: relative;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--sidebar-hover);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .sidebar-menu a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--accent-color);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-subtitle {
+            color: #6c757d;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        
+        .stat-card.primary {
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .stat-card.success {
+            border-top: 4px solid #4caf50;
+        }
+        
+        .stat-card.danger {
+            border-top: 4px solid var(--secondary-color);
+        }
+        
+        .stat-card.warning {
+            border-top: 4px solid var(--accent-color);
+        }
+        
+        .stat-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2.5rem;
+            opacity: 0.2;
+        }
+        
+        .stat-card.primary .stat-icon {
+            color: var(--primary-color);
+        }
+        
+        .stat-card.success .stat-icon {
+            color: #4caf50;
+        }
+        
+        .stat-card.danger .stat-icon {
+            color: var(--secondary-color);
+        }
+        
+        .stat-card.warning .stat-icon {
+            color: var(--accent-color);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-bottom: none;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .referral-link-container {
+            background-color: rgba(26, 35, 126, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .referral-link {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .referral-link input {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 8px 0 0 8px;
+            padding: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .referral-link button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            padding: 0 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .referral-link button:hover {
+            background-color: #14178c;
+        }
+        
+        .referral-code {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .referral-code span {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .social-share {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .social-share button {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .social-share .facebook {
+            background-color: #3b5998;
+        }
+        
+        .social-share .twitter {
+            background-color: #1da1f2;
+        }
+        
+        .social-share .whatsapp {
+            background-color: #25d366;
+        }
+        
+        .social-share .copy {
+            background-color: var(--secondary-color);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .table td, .table th {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+        
+        .badge {
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+            border-radius: 6px;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            border-color: transparent;
+            color: var(--primary-color);
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: transparent;
+            border-color: var(--primary-color);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.25);
+        }
+        
+        .btn {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #14178c;
+            border-color: #14178c;
+        }
+        
+        .btn-success {
+            background-color: #4caf50;
+            border-color: #4caf50;
+        }
+        
+        .btn-success:hover {
+            background-color: #3d8b40;
+            border-color: #3d8b40;
+        }
+        
+        .btn-danger {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 1rem auto;
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0.5rem;
+            background-color: white;
+        }
+        
+        .upi-details {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .upi-details p {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .upi-id {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer {
+            background-color: #263238;
+            color: rgba(255,255,255,0.7);
+            padding: 1.5rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                height: 100vh;
+                z-index: 1000;
+                transition: all 0.3s ease;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .sidebar-toggle {
+                display: block;
+                position: fixed;
+                top: 85px;
+                left: 15px;
+                z-index: 1001;
+                background-color: var(--primary-color);
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .social-share {
+                flex-wrap: wrap;
+            }
+            
+            .social-share button {
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-coins me-2"></i>CoinStar
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <img src="https://picsum.photos/seed/user123/40/40.jpg" alt="User" class="rounded-circle me-2" id="userAvatar">
+                            <span id="userName">Loading...</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="pill" data-bs-target="#profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Sidebar Toggle Button for Mobile -->
+        <button class="sidebar-toggle d-none" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://picsum.photos/seed/user123/80/80.jpg" alt="User" class="user-avatar">
+                <div class="user-name" id="sidebarUserName">Loading...</div>
+                <div class="user-email" id="sidebarUserEmail">Loading...</div>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#" class="active" data-bs-toggle="pill" data-bs-target="#dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-bs-toggle="pill" data-bs-target="#profile">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-bs-toggle="pill" data-bs-target="#wallet">
+                        <i class="fas fa-wallet"></i>
+                        <span>Wallet</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-bs-toggle="pill" data-bs-target="#referral">
+                        <i class="fas fa-link"></i>
+                        <span>Referral Earnings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-bs-toggle="pill" data-bs-target="#users">
+                        <i class="fas fa-users"></i>
+                        <span>My Referrals</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-bs-toggle="pill" data-bs-target="#transactions">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Transactions</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="content">
+            <div class="tab-content">
+                <!-- Dashboard Tab -->
+                <div class="tab-pane fade show active" id="dashboard">
+                    <div class="page-header">
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Welcome back! Here's what's happening with your account.</p>
+                    </div>
+                    
+                    <div class="loading-spinner" id="dashboardLoading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Loading dashboard data...</p>
+                    </div>
+                    
+                    <div class="stats-container" id="dashboardStats" style="display: none;">
+                        <div class="stat-card primary">
+                            <i class="fas fa-wallet stat-icon"></i>
+                            <div class="stat-value" id="walletBalance">₹0</div>
+                            <div class="stat-label">Wallet Balance</div>
+                        </div>
+                        
+                        <div class="stat-card success">
+                            <i class="fas fa-coins stat-icon"></i>
+                            <div class="stat-value" id="totalEarnings">₹0</div>
+                            <div class="stat-label">Total Earnings</div>
+                        </div>
+                        
+                        <div class="stat-card danger">
+                            <i class="fas fa-users stat-icon"></i>
+                            <div class="stat-value" id="totalReferrals">0</div>
+                            <div class="stat-label">Total Referrals</div>
+                        </div>
+                        
+                        <div class="stat-card warning">
+                            <i class="fas fa-user-check stat-icon"></i>
+                            <div class="stat-value" id="activeReferrals">0</div>
+                            <div class="stat-label">Active Referrals</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row" id="dashboardContent" style="display: none;">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Referral Link</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>Share this link with your friends to earn referral bonuses:</p>
+                                    <div class="referral-link-container">
+                                        <div class="referral-link">
+                                            <input type="text" class="form-control" id="referralLink" value="" readonly>
+                                            <button type="button" id="copyLink">
+                                                <i class="fas fa-copy"></i> Copy
+                                            </button>
+                                        </div>
+                                        <div class="referral-code">
+                                            <span>Your Referral Code:</span>
+                                            <strong id="referralCode">Loading...</strong>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="social-share">
+                                        <button class="facebook">
+                                            <i class="fab fa-facebook-f"></i> Facebook
+                                        </button>
+                                        <button class="twitter">
+                                            <i class="fab fa-twitter"></i> Twitter
+                                        </button>
+                                        <button class="whatsapp">
+                                            <i class="fab fa-whatsapp"></i> WhatsApp
+                                        </button>
+                                        <button class="copy" id="copyReferralCode">
+                                            <i class="fas fa-copy"></i> Copy Code
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Recent Transactions</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-container">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Description</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="recentTransactions">
+                                                <tr>
+                                                    <td colspan="3" class="text-center">Loading transactions...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <a href="#" class="btn btn-outline-primary" data-bs-toggle="pill" data-bs-target="#transactions">View All</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Tab -->
+                <div class="tab-pane fade" id="profile">
+                    <div class="page-header">
+                        <h1 class="page-title">Profile</h1>
+                        <p class="page-subtitle">Manage your personal information and account settings.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Personal Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="profileForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="firstName" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstName" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="lastName" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" id="address" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="profileReferralCode" class="form-label">Your Referral Code</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="profileReferralCode" readonly>
+                                        <button class="btn btn-outline-secondary" type="button" id="copyProfileReferralCode">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-secondary me-2">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </form>
+                            
+                            <div class="alert alert-success mt-3" id="profileSuccessAlert" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Profile updated successfully!
+                            </div>
+                            
+                            <div class="alert alert-danger mt-3" id="profileErrorAlert" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                Error: <span id="profileErrorMessage"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Wallet Tab -->
+                <div class="tab-pane fade" id="wallet">
+                    <div class="page-header">
+                        <h1 class="page-title">Wallet</h1>
+                        <p class="page-subtitle">Manage your wallet balance and transactions.</p>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">Wallet Balance</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <h1 class="display-4" id="walletBalanceLarge">₹0</h1>
+                            <p class="text-muted">Available Balance</p>
+                        </div>
+                    </div>
+                    
+                    <ul class="nav nav-tabs" id="walletTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="add-money-tab" data-bs-toggle="tab" data-bs-target="#add-money" type="button" role="tab">Add Money</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="withdraw-money-tab" data-bs-toggle="tab" data-bs-target="#withdraw-money" type="button" role="tab">Withdraw Money</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="walletTabsContent">
+                        <!-- Add Money Tab -->
+                        <div class="tab-pane fade show active" id="add-money">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Add Money to Wallet</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="addMoneyForm">
+                                        <div class="mb-3">
+                                            <label for="addAmount" class="form-label">Amount (₹)</label>
+                                            <input type="number" class="form-control" id="addAmount" min="100" required>
+                                            <div class="form-text">Minimum amount: ₹100</div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Payment Method</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="paymentMethod" id="upiPayment" value="upi" checked>
+                                                <label class="form-check-label" for="upiPayment">
+                                                    UPI Payment
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="paymentMethod" id="bankPayment" value="bank">
+                                                <label class="form-check-label" for="bankPayment">
+                                                    Bank Transfer
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div id="upiPaymentDetails" class="mb-3">
+                                            <label class="form-label">UPI Details</label>
+                                            <div class="text-center">
+                                                <p>Scan the QR code below to pay:</p>
+                                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=yadav.1014@superyes&pn=CoinStar&am=500&cu=INR" alt="UPI QR Code" class="qr-code">
+                                                <p class="mt-2">UPI ID: <strong class="upi-id">yadav.1014@superyes</strong></p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div id="bankPaymentDetails" class="mb-3" style="display: none;">
+                                            <label class="form-label">Bank Details</label>
+                                            <div class="card bg-light">
+                                                <div class="card-body">
+                                                    <p><strong>Account Name:</strong> CoinStar Pvt Ltd</p>
+                                                    <p><strong>Account Number:</strong> 123456789012</p>
+                                                    <p><strong>IFSC Code:</strong> ABCD0001234</p>
+                                                    <p><strong>Bank Name:</strong> Example Bank</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="transactionId" class="form-label">Transaction ID</label>
+                                            <input type="text" class="form-control" id="transactionId" placeholder="Enter transaction ID after payment" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="addMoneyNote" class="form-label">Note (Optional)</label>
+                                            <textarea class="form-control" id="addMoneyNote" rows="2"></textarea>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary w-100">Submit Request</button>
+                                    </form>
+                                    
+                                    <div class="alert alert-success mt-3" id="addMoneySuccessAlert" role="alert">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        Add money request submitted successfully! It will be processed soon.
+                                    </div>
+                                    
+                                    <div class="alert alert-danger mt-3" id="addMoneyErrorAlert" role="alert">
+                                        <i class="fas fa-exclamation-circle me-2"></i>
+                                        Error: <span id="addMoneyErrorMessage"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Withdraw Money Tab -->
+                        <div class="tab-pane fade" id="withdraw-money">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Withdraw Money from Wallet</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="withdrawMoneyForm">
+                                        <div class="mb-3">
+                                            <label for="withdrawAmount" class="form-label">Amount (₹)</label>
+                                            <input type="number" class="form-control" id="withdrawAmount" min="500" max="5000" required>
+                                            <div class="form-text">Minimum withdrawal: ₹500, Maximum: ₹5000</div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Withdrawal Method</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="withdrawalMethod" id="withdrawUpi" value="upi" checked>
+                                                <label class="form-check-label" for="withdrawUpi">
+                                                    UPI
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="withdrawalMethod" id="withdrawBank" value="bank">
+                                                <label class="form-check-label" for="withdrawBank">
+                                                    Bank Account
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div id="withdrawUpiDetails" class="mb-3">
+                                            <label for="upiId" class="form-label">UPI ID</label>
+                                            <input type="text" class="form-control" id="upiId" placeholder="your@upi" required>
+                                        </div>
+                                        
+                                        <div id="withdrawBankDetails" class="mb-3" style="display: none;">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="accountName" class="form-label">Account Holder Name</label>
+                                                    <input type="text" class="form-control" id="accountName" required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="accountNumber" class="form-label">Account Number</label>
+                                                    <input type="text" class="form-control" id="accountNumber" required>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="ifscCode" class="form-label">IFSC Code</label>
+                                                    <input type="text" class="form-control" id="ifscCode" required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="bankName" class="form-label">Bank Name</label>
+                                                    <input type="text" class="form-control" id="bankName" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="withdrawNote" class="form-label">Note (Optional)</label>
+                                            <textarea class="form-control" id="withdrawNote" rows="2"></textarea>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary w-100">Submit Withdrawal Request</button>
+                                    </form>
+                                    
+                                    <div class="alert alert-success mt-3" id="withdrawMoneySuccessAlert" role="alert">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        Withdrawal request submitted successfully! It will be processed soon.
+                                    </div>
+                                    
+                                    <div class="alert alert-danger mt-3" id="withdrawMoneyErrorAlert" role="alert">
+                                        <i class="fas fa-exclamation-circle me-2"></i>
+                                        Error: <span id="withdrawMoneyErrorMessage"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Referral Earnings Tab -->
+                <div class="tab-pane fade" id="referral">
+                    <div class="page-header">
+                        <h1 class="page-title">Referral Earnings</h1>
+                        <p class="page-subtitle">Track your referral earnings and share your referral link.</p>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">Referral Statistics</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 text-center mb-3">
+                                    <h3 id="referralTotalReferrals">0</h3>
+                                    <p>Total Referrals</p>
+                                </div>
+                                <div class="col-md-3 text-center mb-3">
+                                    <h3 id="referralActiveReferrals">0</h3>
+                                    <p>Active Referrals</p>
+                                </div>
+                                <div class="col-md-3 text-center mb-3">
+                                    <h3 id="referralInactiveReferrals">0</h3>
+                                    <p>Inactive Referrals</p>
+                                </div>
+                                <div class="col-md-3 text-center mb-3">
+                                    <h3 id="referralTotalEarnings">₹0</h3>
+                                    <p>Total Earnings</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Referral Link</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>Share this link with your friends to earn referral bonuses:</p>
+                            <div class="referral-link-container">
+                                <div class="referral-link">
+                                    <input type="text" class="form-control" id="referralLinkFull" value="" readonly>
+                                    <button type="button" id="copyLinkFull">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                                <div class="referral-code">
+                                    <span>Your Referral Code:</span>
+                                    <strong id="referralCodeFull">Loading...</strong>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <p>Referral Bonus: <strong>₹100</strong> for each successful referral</p>
+                            </div>
+                            
+                            <div class="social-share">
+                                <button class="facebook">
+                                    <i class="fab fa-facebook-f"></i> Facebook
+                                </button>
+                                <button class="twitter">
+                                    <i class="fab fa-twitter"></i> Twitter
+                                </button>
+                                <button class="whatsapp">
+                                    <i class="fab fa-whatsapp"></i> WhatsApp
+                                </button>
+                                <button class="copy" id="copyReferralCodeFull">
+                                    <i class="fas fa-copy"></i> Copy Code
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- My Referrals Tab -->
+                <div class="tab-pane fade" id="users">
+                    <div class="page-header">
+                        <h1 class="page-title">My Referrals</h1>
+                        <p class="page-subtitle">View all users who joined through your referral link.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title">Referred Users</h5>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary active" id="activeUsersBtn">Active (0)</button>
+                                <button class="btn btn-sm btn-outline-secondary" id="inactiveUsersBtn">Inactive (0)</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Join Date</th>
+                                            <th>Status</th>
+                                            <th>Earnings</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="activeUsersTable">
+                                        <tr>
+                                            <td colspan="5" class="text-center">Loading active referrals...</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody id="inactiveUsersTable" style="display: none;">
+                                        <tr>
+                                            <td colspan="5" class="text-center">Loading inactive referrals...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transactions Tab -->
+                <div class="tab-pane fade" id="transactions">
+                    <div class="page-header">
+                        <h1 class="page-title">Transactions</h1>
+                        <p class="page-subtitle">View your complete transaction history.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Transaction History</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="allTransactions">
+                                        <tr>
+                                            <td colspan="5" class="text-center">Loading transactions...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 CoinStar. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" type="module"></script>
+    <script type="module">
+        // Import Firebase functions
+        import { 
+            auth, 
+            database, 
+            checkAuth, 
+            onAuthStateChanged, 
+            signOut, 
+            ref, 
+            get, 
+            update, 
+            onValue, 
+            push 
+        } from './firebase-config.js';
+        
+        // Check authentication
+        checkAuth();
+        
+        // Global variables
+        let currentUser = null;
+        let currentUserId = null;
+        
+        // Check if user is logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                currentUser = user;
+                currentUserId = user.uid;
+                console.log("User is logged in:", user.uid);
+                
+                // Load user data
+                loadUserData();
+                
+                // Load dashboard data
+                loadDashboardData();
+                
+                // Load transactions
+                loadTransactions();
+                
+                // Load referrals
+                loadReferrals();
+            } else {
+                // User is signed out
+                console.log("User is not logged in");
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        });
+        
+        // Mobile sidebar toggle
+        document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+        
+        // Load user data
+        function loadUserData() {
+            const userRef = ref(database, 'users/' + currentUserId);
+            onValue(userRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    console.log("User data:", userData);
+                    
+                    // Update UI with user data
+                    const fullName = userData.firstName + ' ' + userData.lastName;
+                    document.getElementById('userName').textContent = fullName;
+                    document.getElementById('sidebarUserName').textContent = fullName;
+                    document.getElementById('userAvatar').src = `https://picsum.photos/seed/${currentUserId}/40/40.jpg`;
+                    document.querySelector('.user-avatar').src = `https://picsum.photos/seed/${currentUserId}/80/80.jpg`;
+                    document.getElementById('sidebarUserEmail').textContent = userData.email;
+                    
+                    document.getElementById('firstName').value = userData.firstName || '';
+                    document.getElementById('lastName').value = userData.lastName || '';
+                    document.getElementById('email').value = userData.email || '';
+                    document.getElementById('phone').value = userData.phone || '';
+                    document.getElementById('address').value = userData.address || '';
+                    document.getElementById('profileReferralCode').value = userData.referralCode || '';
+                    
+                    // Update referral links
+                    const referralLink = `https://coinspare.github.io/coinstar/register.html?ref=${userData.referralCode}`;
+                    document.getElementById('referralLink').value = referralLink;
+                    document.getElementById('referralLinkFull').value = referralLink;
+                    document.getElementById('referralCode').textContent = userData.referralCode || '';
+                    document.getElementById('referralCodeFull').textContent = userData.referralCode || '';
+                    
+                    // Update wallet balance
+                    const walletBalance = userData.walletBalance || 0;
+                    document.getElementById('walletBalance').textContent = `₹${walletBalance}`;
+                    document.getElementById('walletBalanceLarge').textContent = `₹${walletBalance}`;
+                    
+                    // Update total earnings
+                    const totalEarnings = userData.totalEarnings || 0;
+                    document.getElementById('totalEarnings').textContent = `₹${totalEarnings}`;
+                    document.getElementById('referralTotalEarnings').textContent = `₹${totalEarnings}`;
+                    
+                    // Show dashboard content
+                    document.getElementById('dashboardLoading').style.display = 'none';
+                    document.getElementById('dashboardStats').style.display = 'grid';
+                    document.getElementById('dashboardContent').style.display = 'flex';
+                } else {
+                    console.log("No user data available");
+                }
+            });
+        }
+        
+        // Load dashboard data
+        function loadDashboardData() {
+            // Get user data for referrals
+            const userRef = ref(database, 'users/' + currentUserId);
+            onValue(userRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    
+                    // Get referrals
+                    const referrals = userData.referrals || [];
+                    document.getElementById('totalReferrals').textContent = referrals.length;
+                    document.getElementById('referralTotalReferrals').textContent = referrals.length;
+                    
+                    // Count active referrals
+                    let activeReferralsCount = 0;
+                    
+                    // For each referral, check if user is active
+                    if (referrals.length > 0) {
+                        referrals.forEach(referralId => {
+                            const referralUserRef = ref(database, 'users/' + referralId);
+                            onValue(referralUserRef, (referralSnapshot) => {
+                                if (referralSnapshot.exists()) {
+                                    const referralUserData = referralSnapshot.val();
+                                    if (referralUserData.status === 'active') {
+                                        activeReferralsCount++;
+                                    }
+                                    
+                                    // Update active referrals count
+                                    document.getElementById('activeReferrals').textContent = activeReferralsCount;
+                                    document.getElementById('referralActiveReferrals').textContent = activeReferralsCount;
+                                    document.getElementById('referralInactiveReferrals').textContent = referrals.length - activeReferralsCount;
+                                    
+                                    // Update button counts
+                                    document.getElementById('activeUsersBtn').textContent = `Active (${activeReferralsCount})`;
+                                    document.getElementById('inactiveUsersBtn').textContent = `Inactive (${referrals.length - activeReferralsCount})`;
+                                }
+                            });
+                        });
+                    } else {
+                        // No referrals
+                        document.getElementById('activeReferrals').textContent = '0';
+                        document.getElementById('referralActiveReferrals').textContent = '0';
+                        document.getElementById('referralInactiveReferrals').textContent = '0';
+                        document.getElementById('activeUsersBtn').textContent = 'Active (0)';
+                        document.getElementById('inactiveUsersBtn').textContent = 'Inactive (0)';
+                    }
+                }
+            });
+        }
+        
+        // Load transactions
+        function loadTransactions() {
+            const transactionsRef = ref(database, 'transactions');
+            onValue(transactionsRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const transactions = [];
+                    snapshot.forEach((childSnapshot) => {
+                        const transaction = childSnapshot.val();
+                        transaction.id = childSnapshot.key;
+                        
+                        // Only include transactions for current user
+                        if (transaction.userId === currentUserId) {
+                            transactions.push(transaction);
+                        }
+                    });
+                    
+                    // Sort transactions by date (newest first)
+                    transactions.sort((a, b) => {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    });
+                    
+                    // Update recent transactions (first 5)
+                    const recentTransactionsBody = document.getElementById('recentTransactions');
+                    recentTransactionsBody.innerHTML = '';
+                    
+                    if (transactions.length > 0) {
+                        const recentTransactions = transactions.slice(0, 5);
+                        recentTransactions.forEach(transaction => {
+                            const row = document.createElement('tr');
+                            
+                            const date = new Date(transaction.createdAt).toLocaleDateString();
+                            const typeClass = transaction.type === 'credit' ? 'text-success' : 'text-danger';
+                            const typeSign = transaction.type === 'credit' ? '+' : '-';
+                            
+                            row.innerHTML = `
+                                <td>${date}</td>
+                                <td>${transaction.description}</td>
+                                <td class="${typeClass}">${typeSign}₹${transaction.amount}</td>
+                            `;
+                            
+                            recentTransactionsBody.appendChild(row);
+                        });
+                    } else {
+                        recentTransactionsBody.innerHTML = '<tr><td colspan="3" class="text-center">No transactions found</td></tr>';
+                    }
+                    
+                    // Update all transactions
+                    const allTransactionsBody = document.getElementById('allTransactions');
+                    allTransactionsBody.innerHTML = '';
+                    
+                    if (transactions.length > 0) {
+                        transactions.forEach(transaction => {
+                            const row = document.createElement('tr');
+                            
+                            const date = new Date(transaction.createdAt).toLocaleDateString();
+                            const typeClass = transaction.type === 'credit' ? 'text-success' : 'text-danger';
+                            const typeSign = transaction.type === 'credit' ? '+' : '-';
+                            const statusBadge = getStatusBadge(transaction.status);
+                            
+                            row.innerHTML = `
+                                <td>${date}</td>
+                                <td>${getTypeBadge(transaction.type)}</td>
+                                <td>${transaction.description}</td>
+                                <td class="${typeClass}">${typeSign}₹${transaction.amount}</td>
+                                <td>${statusBadge}</td>
+                            `;
+                            
+                            allTransactionsBody.appendChild(row);
+                        });
+                    } else {
+                        allTransactionsBody.innerHTML = '<tr><td colspan="5" class="text-center">No transactions found</td></tr>';
+                    }
+                } else {
+                    document.getElementById('recentTransactions').innerHTML = '<tr><td colspan="3" class="text-center">No transactions found</td></tr>';
+                    document.getElementById('allTransactions').innerHTML = '<tr><td colspan="5" class="text-center">No transactions found</td></tr>';
+                }
+            });
+        }
+        
+        // Load referrals
+        function loadReferrals() {
+            const userRef = ref(database, 'users/' + currentUserId);
+            onValue(userRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    const referrals = userData.referrals || [];
+                    
+                    // Load active referrals
+                    const activeUsersTable = document.getElementById('activeUsersTable');
+                    activeUsersTable.innerHTML = '';
+                    
+                    // Load inactive referrals
+                    const inactiveUsersTable = document.getElementById('inactiveUsersTable');
+                    inactiveUsersTable.innerHTML = '';
+                    
+                    if (referrals.length > 0) {
+                        let activeReferralsCount = 0;
+                        
+                        referrals.forEach(referralId => {
+                            const referralUserRef = ref(database, 'users/' + referralId);
+                            onValue(referralUserRef, (referralSnapshot) => {
+                                if (referralSnapshot.exists()) {
+                                    const referralUserData = referralSnapshot.val();
+                                    const joinDate = new Date(referralUserData.registrationDate).toLocaleDateString();
+                                    const statusBadge = getStatusBadge(referralUserData.status);
+                                    
+                                    const row = document.createElement('tr');
+                                    row.innerHTML = `
+                                        <td>${referralUserData.firstName} ${referralUserData.lastName}</td>
+                                        <td>${referralUserData.email}</td>
+                                        <td>${joinDate}</td>
+                                        <td>${statusBadge}</td>
+                                        <td>₹${referralUserData.totalEarnings || 0}</td>
+                                    `;
+                                    
+                                    if (referralUserData.status === 'active') {
+                                        activeUsersTable.appendChild(row);
+                                        activeReferralsCount++;
+                                    } else {
+                                        inactiveUsersTable.appendChild(row);
+                                    }
+                                    
+                                    // Update counts
+                                    document.getElementById('activeUsersBtn').textContent = `Active (${activeReferralsCount})`;
+                                    document.getElementById('inactiveUsersBtn').textContent = `Inactive (${referrals.length - activeReferralsCount})`;
+                                }
+                            });
+                        });
+                    } else {
+                        activeUsersTable.innerHTML = '<tr><td colspan="5" class="text-center">No active referrals found</td></tr>';
+                        inactiveUsersTable.innerHTML = '<tr><td colspan="5" class="text-center">No inactive referrals found</td></tr>';
+                        document.getElementById('activeUsersBtn').textContent = 'Active (0)';
+                        document.getElementById('inactiveUsersBtn').textContent = 'Inactive (0)';
+                    }
+                }
+            });
+        }
+        
+        // Helper function to get status badge HTML
+        function getStatusBadge(status) {
+            switch (status) {
+                case 'active':
+                case 'completed':
+                case 'approved':
+                    return '<span class="badge bg-success">' + status.charAt(0).toUpperCase() + status.slice(1) + '</span>';
+                case 'inactive':
+                case 'rejected':
+                    return '<span class="badge bg-danger">' + status.charAt(0).toUpperCase() + status.slice(1) + '</span>';
+                case 'pending':
+                    return '<span class="badge bg-warning">' + status.charAt(0).toUpperCase() + status.slice(1) + '</span>';
+                default:
+                    return '<span class="badge bg-secondary">' + status.charAt(0).toUpperCase() + status.slice(1) + '</span>';
+            }
+        }
+        
+        // Helper function to get type badge HTML
+        function getTypeBadge(type) {
+            switch (type) {
+                case 'credit':
+                    return '<span class="badge bg-success">Credit</span>';
+                case 'debit':
+                    return '<span class="badge bg-danger">Debit</span>';
+                default:
+                    return '<span class="badge bg-secondary">' + type.charAt(0).toUpperCase() + type.slice(1) + '</span>';
+            }
+        }
+        
+        // Copy referral link
+        document.getElementById('copyLink')?.addEventListener('click', function() {
+            const referralLink = document.getElementById('referralLink');
+            referralLink.select();
+            referralLink.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(referralLink.value);
+            
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 2000);
+        });
+        
+        // Copy full referral link
+        document.getElementById('copyLinkFull')?.addEventListener('click', function() {
+            const referralLinkFull = document.getElementById('referralLinkFull');
+            referralLinkFull.select();
+            referralLinkFull.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(referralLinkFull.value);
+            
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 2000);
+        });
+        
+        // Copy referral code
+        document.getElementById('copyReferralCode')?.addEventListener('click', function() {
+            const referralCode = document.getElementById('referralCode');
+            referralCode.select();
+            referralCode.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(referralCode.value);
+            
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 2000);
+        });
+        
+        // Copy profile referral code
+        document.getElementById('copyProfileReferralCode')?.addEventListener('click', function() {
+            const profileReferralCode = document.getElementById('profileReferralCode');
+            profileReferralCode.select();
+            profileReferralCode.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(profileReferralCode.value);
+            
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 2000);
+        });
+        
+        // Copy full referral code
+        document.getElementById('copyReferralCodeFull')?.addEventListener('click', function() {
+            const referralCodeFull = document.getElementById('referralCodeFull');
+            referralCodeFull.select();
+            referralCodeFull.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(referralCodeFull.value);
+            
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 2000);
+        });
+        
+        // Payment method toggle
+        document.querySelectorAll('input[name="paymentMethod"]')?.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'upi') {
+                    document.getElementById('upiPaymentDetails').style.display = 'block';
+                    document.getElementById('bankPaymentDetails').style.display = 'none';
+                } else {
+                    document.getElementById('upiPaymentDetails').style.display = 'none';
+                    document.getElementById('bankPaymentDetails').style.display = 'block';
+                }
+            });
+        });
+        
+        // Withdrawal method toggle
+        document.querySelectorAll('input[name="withdrawalMethod"]')?.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'upi') {
+                    document.getElementById('withdrawUpiDetails').style.display = 'block';
+                    document.getElementById('withdrawBankDetails').style.display = 'none';
+                } else {
+                    document.getElementById('withdrawUpiDetails').style.display = 'none';
+                    document.getElementById('withdrawBankDetails').style.display = 'block';
+                }
+            });
+        });
+        
+        // Active/Inactive users toggle
+        document.getElementById('activeUsersBtn')?.addEventListener('click', function() {
+            document.getElementById('activeUsersTable').style.display = '';
+            document.getElementById('inactiveUsersTable').style.display = 'none';
+            this.classList.add('btn-primary');
+            this.classList.remove('btn-outline-primary');
+            document.getElementById('inactiveUsersBtn').classList.add('btn-outline-secondary');
+            document.getElementById('inactiveUsersBtn').classList.remove('btn-secondary');
+        });
+        
+        document.getElementById('inactiveUsersBtn')?.addEventListener('click', function() {
+            document.getElementById('activeUsersTable').style.display = 'none';
+            document.getElementById('inactiveUsersTable').style.display = '';
+            this.classList.add('btn-secondary');
+            this.classList.remove('btn-outline-secondary');
+            document.getElementById('activeUsersBtn').classList.add('btn-outline-primary');
+            document.getElementById('activeUsersBtn').classList.remove('btn-primary');
+        });
+        
+        // Handle profile form submission
+        document.getElementById('profileForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            
+            // Hide alerts
+            document.getElementById('profileSuccessAlert').style.display = 'none';
+            document.getElementById('profileErrorAlert').style.display = 'none';
+            
+            // Update user data in database
+            const userRef = ref(database, 'users/' + currentUserId);
+            update(userRef, {
+                firstName: firstName,
+                lastName: lastName,
+                phone: phone,
+                address: address
+            }).then(() => {
+                console.log("Profile updated successfully");
+                
+                // Show success message
+                document.getElementById('profileSuccessAlert').style.display = 'block';
+                
+                // Hide success message after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('profileSuccessAlert').style.display = 'none';
+                }, 3000);
+            }).catch((error) => {
+                console.error("Error updating profile:", error);
+                
+                // Show error message
+                document.getElementById('profileErrorMessage').textContent = error.message;
+                document.getElementById('profileErrorAlert').style.display = 'block';
+            });
+        });
+        
+        // Handle add money form submission
+        document.getElementById('addMoneyForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const amount = document.getElementById('addAmount').value;
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const transactionId = document.getElementById('transactionId').value;
+            const note = document.getElementById('addMoneyNote').value;
+            
+            // Hide alerts
+            document.getElementById('addMoneySuccessAlert').style.display = 'none';
+            document.getElementById('addMoneyErrorAlert').style.display = 'none';
+            
+            // Create add money request
+            const addMoneyRequestRef = push(ref(database, 'addMoneyRequests'));
+            set(addMoneyRequestRef, {
+                userId: currentUserId,
+                amount: parseInt(amount),
+                paymentMethod: paymentMethod,
+                transactionId: transactionId,
+                note: note,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            }).then(() => {
+                console.log("Add money request submitted successfully");
+                
+                // Show success message
+                document.getElementById('addMoneySuccessAlert').style.display = 'block';
+                
+                // Reset form
+                this.reset();
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('addMoneySuccessAlert').style.display = 'none';
+                }, 5000);
+            }).catch((error) => {
+                console.error("Error submitting add money request:", error);
+                
+                // Show error message
+                document.getElementById('addMoneyErrorMessage').textContent = error.message;
+                document.getElementById('addMoneyErrorAlert').style.display = 'block';
+            });
+        });
+        
+        // Handle withdraw money form submission
+        document.getElementById('withdrawMoneyForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const amount = document.getElementById('withdrawAmount').value;
+            const withdrawalMethod = document.querySelector('input[name="withdrawalMethod"]:checked').value;
+            const note = document.getElementById('withdrawNote').value;
+            
+            // Hide alerts
+            document.getElementById('withdrawMoneySuccessAlert').style.display = 'none';
+            document.getElementById('withdrawMoneyErrorAlert').style.display = 'none';
+            
+            let paymentDetails = {};
+            
+            if (withdrawalMethod === 'upi') {
+                paymentDetails.upiId = document.getElementById('upiId').value;
+            } else {
+                paymentDetails = {
+                    accountName: document.getElementById('accountName').value,
+                    accountNumber: document.getElementById('accountNumber').value,
+                    ifscCode: document.getElementById('ifscCode').value,
+                    bankName: document.getElementById('bankName').value
+                };
+            }
+            
+            // Create withdrawal request
+            const withdrawalRequestRef = push(ref(database, 'withdrawalRequests'));
+            set(withdrawalRequestRef, {
+                userId: currentUserId,
+                amount: parseInt(amount),
+                withdrawalMethod: withdrawalMethod,
+                paymentDetails: paymentDetails,
+                note: note,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            }).then(() => {
+                console.log("Withdrawal request submitted successfully");
+                
+                // Show success message
+                document.getElementById('withdrawMoneySuccessAlert').style.display = 'block';
+                
+                // Reset form
+                this.reset();
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('withdrawMoneySuccessAlert').style.display = 'none';
+                }, 5000);
+            }).catch((error) => {
+                console.error("Error submitting withdrawal request:", error);
+                
+                // Show error message
+                document.getElementById('withdrawMoneyErrorMessage').textContent = error.message;
+                document.getElementById('withdrawMoneyErrorAlert').style.display = 'block';
+            });
+        });
+        
+        // Logout button
+        document.getElementById('logoutBtn')?.addEventListener('click', function() {
+            signOut(auth).then(() => {
+                console.log("User signed out successfully");
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error("Error signing out:", error);
+            });
+        });
+    </script>
+</body>
+</html>
