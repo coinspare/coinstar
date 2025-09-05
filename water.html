@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HimWater - Pure Mineral Water</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Background Image */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Water Droplet Overlay */
+        .water-drops {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .drop {
+            position: absolute;
+            background-color: rgba(255, 182, 193, 0.6);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Content Container */
+        .content-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .cta-button {
+            background-color: #fff;
+            color: #ff69b4;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-button:hover {
+            background-color: #ff69b4;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Products Section */
+        .products-section {
+            padding: 80px 20px;
+            background-color: #f8f8f8;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #ff69b4;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+            object-fit: contain;
+            background-color: #f0f8ff;
+        }
+
+        .product-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            color: #ff69b4;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .buy-button {
+            background-color: #ff69b4;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .buy-button:hover {
+            background-color: #e55a9c;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 80px 20px;
+            background-color: white;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #ff69b4;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #ff69b4;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: #ff69b4;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="water-drops" id="waterDrops"></div>
+        <div class="content-container">
+            <h1>HimWater</h1>
+            <p class="tagline">Pure Mineral Water for Life's Moments</p>
+            <button class="cta-button">Order Now</button>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <h2 class="section-title">Our Bottles</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="https://picsum.photos/seed/water-bottle-500ml/400/400.jpg" 
+                     alt="500ml Standard Bottle" 
+                     class="product-image">
+                <div class="product-info">
+                    <h3 class="product-name">500ml Standard</h3>
+                    <p class="product-price">$1.99</p>
+                    <button class="buy-button">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://picsum.photos/seed/large-water-bottle-1l/400/400.jpg" 
+                     alt="1L Large Bottle" 
+                     class="product-image">
+                <div class="product-info">
+                    <h3 class="product-name">1L Large Bottle</h3>
+                    <p class="product-price">$2.49</p>
+                    <button class="buy-button">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://picsum.photos/seed/sports-water-bottle/400/400.jpg" 
+                     alt="Sports Bottle" 
+                     class="product-image">
+                <div class="product-info">
+                    <h3 class="product-name">Sports Bottle</h3>
+                    <p class="product-price">$3.99</p>
+                    <button class="buy-button">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2 class="section-title">Why Choose HimWater?</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <i class="fas fa-tint feature-icon"></i>
+                <h3 class="feature-title">Natural Source</h3>
+                <p class="feature-description">Sourced from pristine Himalayan springs, untouched by pollution.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-gem feature-icon"></i>
+                <h3 class="feature-title">Rich Minerals</h3>
+                <p class="feature-description">Contains essential minerals like calcium, magnesium, and potassium.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <h3 class="feature-title">Quality Tested</h3>
+                <p class="feature-description">Rigorously tested for purity and safety in ISO-certified labs.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#" class="footer-link">Home</a>
+            <a href="#" class="footer-link">Products</a>
+            <a href="#" class="footer-link">About Us</a>
+            <a href="#" class="footer-link">Contact</a>
+        </div>
+        <p>&copy; 2023 HimWater. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // Generate water droplets dynamically
+        function generateWaterDrops() {
+            const container = document.getElementById('waterDrops');
+            const numDrops = 20;
+            
+            for (let i = 0; i < numDrops; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('drop');
+                
+                // Random size between 10px and 30px
+                const size = Math.random() * 20 + 10;
+                drop.style.width = `${size}px`;
+                drop.style.height = `${size}px`;
+                
+                // Random position
+                drop.style.left = `${Math.random() * 100}%`;
+                drop.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation delay
+                drop.style.animationDelay = `${Math.random() * 6}s`;
+                
+                container.appendChild(drop);
+            }
+        }
+        
+        // Initialize water drops when page loads
+        window.addEventListener('load', generateWaterDrops);
+    </script>
+</body>
+</html>
